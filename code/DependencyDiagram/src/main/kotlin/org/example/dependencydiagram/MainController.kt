@@ -13,6 +13,7 @@ import org.example.dependencydiagram.debouncer.InputDebouncer
 import org.example.dependencydiagram.model.Graph
 import org.example.dependencydiagram.model.Vertex
 import org.example.dependencydiagram.parser.RegexGraphParser
+import org.example.dependencydiagram.renderer.JavaFXGraphRenderer
 
 class MainController {
     @FXML private lateinit var graphInputTextArea: TextArea

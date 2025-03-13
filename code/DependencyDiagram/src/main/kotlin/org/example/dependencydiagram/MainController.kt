@@ -10,10 +10,13 @@ import javafx.scene.control.cell.CheckBoxListCell
 import javafx.scene.image.ImageView
 import javafx.util.StringConverter
 import org.example.dependencydiagram.debouncer.InputDebouncer
+import org.example.dependencydiagram.generator.PlantUMLCodeGenerator
+import org.example.dependencydiagram.generator.PlantUMLImageGenerator
 import org.example.dependencydiagram.model.Graph
 import org.example.dependencydiagram.model.Vertex
 import org.example.dependencydiagram.parser.RegexGraphParser
 import org.example.dependencydiagram.renderer.JavaFXGraphRenderer
+import org.example.dependencydiagram.renderer.PlantUMLGraphRenderer
 
 class MainController {
     @FXML private lateinit var graphInputTextArea: TextArea
@@ -26,7 +29,7 @@ class MainController {
     private val debouncer = InputDebouncer(500L)
     private val renderer = JavaFXGraphRenderer(
         PlantUMLGraphRenderer(
-            DefaultPlantUMLCodeGenerator(),
+            PlantUMLCodeGenerator(),
             PlantUMLImageGenerator()
         )
     )

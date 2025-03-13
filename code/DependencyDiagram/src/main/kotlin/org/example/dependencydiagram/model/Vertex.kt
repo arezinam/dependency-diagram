@@ -1,7 +1,6 @@
 package org.example.dependencydiagram.model
 
 import javafx.beans.property.SimpleBooleanProperty
-import javafx.beans.value.ObservableValue
 
 class Vertex(val id: String) {
     val enabledProperty = SimpleBooleanProperty(true)

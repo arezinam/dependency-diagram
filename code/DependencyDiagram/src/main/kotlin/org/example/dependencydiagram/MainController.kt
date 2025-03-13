@@ -7,13 +7,10 @@ import javafx.scene.control.*
 import javafx.scene.image.ImageView
 import javafx.scene.layout.StackPane
 import javafx.scene.layout.VBox
-import org.example.dependencydiagram.config.GraphVisualizerConfig
-import org.example.dependencydiagram.debouncer.Debouncer
 import org.example.dependencydiagram.debouncer.InputDebouncer
 import org.example.dependencydiagram.generator.PlantUMLCodeGenerator
 import org.example.dependencydiagram.generator.PlantUMLImageGenerator
 import org.example.dependencydiagram.model.Graph
-import org.example.dependencydiagram.parser.GraphParser
 import org.example.dependencydiagram.parser.RegexGraphParser
 import org.example.dependencydiagram.renderer.JavaFXGraphRenderer
 import org.example.dependencydiagram.renderer.PlantUMLGraphRenderer

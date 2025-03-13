@@ -1,0 +1,214 @@
+/* main.css */
+.root {
+    -fx-background-color: #111418;
+    -fx-font-family: "Inter", sans-serif;
+    -fx-text-fill: white;
+    -fx-padding: 20;
+}
+
+/* Top section */
+.top-section {
+    -fx-spacing: 10;
+    -fx-padding: 0 0 20 0;
+}
+
+.main-header {
+    -fx-font-size: 36px;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.description-text {
+    -fx-font-size: 14px;
+    -fx-text-fill: white;
+    -fx-wrap-text: true;
+}
+
+/* Left panel */
+.left-panel {
+    -fx-spacing: 20;
+}
+
+.split-pane{
+    -fx-background-color: transparent;
+}
+
+.split-pane .split-pane-divider {
+    -fx-background-color: #3C4753;
+    -fx-padding: 2;
+}
+
+.section-header {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-padding: 0 0 10 0;
+}
+
+/* Graph Data section */
+.graph-data-section {
+    -fx-spacing: 10;
+    -fx-padding: 0 0 30 0;
+}
+
+/* TextArea specific styling */
+.graph-data-input {
+    -fx-background-color: #1C2227;
+    -fx-control-inner-background: #1C2227; /* This sets the inner background */
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #9DABB8;
+    -fx-border-color: #3C4753;
+    -fx-border-style: dashed;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 10 0 10 10;
+    -fx-font-size:20;
+}
+
+/* Make sure the text inside the TextArea is white */
+.graph-data-input .content {
+    -fx-background-color: #1C2227;
+}
+
+.graph-data-input .scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.graph-data-input .scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.graph-data-input .scroll-pane .content {
+    -fx-background-color: #1C2227;
+}
+
+/* Graph Nodes section */
+.graph-nodes-section {
+    -fx-spacing: 10;
+    -fx-padding: 30 0 0 0;
+}
+
+.transparent-background {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.transparent-background > .viewport {
+    -fx-background-color: transparent;
+}
+
+.checkbox-container {
+    -fx-padding: 10;
+}
+
+.node-checkbox {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+}
+
+.node-checkbox .box {
+    -fx-background-color: #3C4753;
+    -fx-border-color: #3C4753;
+    -fx-border-radius: 3;
+}
+
+.node-checkbox:selected .mark {
+    -fx-background-color: white;
+}
+
+.node-checkbox .label {
+    -fx-padding: 0 0 0 10;
+}
+
+/* Right panel */
+.right-panel {
+    -fx-padding: 0 0 0 20;
+    -fx-spacing: 10;
+}
+
+.diagram-container {
+    -fx-border-color: #3C4753;
+    -fx-border-style: dashed;
+    -fx-border-radius: 5;
+    -fx-padding: 10;
+}
+
+.no-data-container {
+    -fx-spacing: 10;
+    -fx-alignment: center;
+}
+
+.no-data-header {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.no-data-text {
+    -fx-font-size: 14px;
+    -fx-text-fill: white;
+}
+
+.load-example-button {
+    -fx-background-color: #293038;
+    -fx-text-fill: white;
+    -fx-background-radius: 7;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+    -fx-margin-top: 10;
+}
+
+/* Global minimalistic ScrollBar styling */
+.scroll-bar {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+/* For vertical scroll bars: narrow width */
+.scroll-bar:vertical {
+    -fx-pref-width: 8px;
+}
+
+/* For horizontal scroll bars: narrow height */
+.scroll-bar:horizontal {
+    -fx-pref-height: 8px;
+}
+
+/* Style the track to be transparent */
+.scroll-bar .track {
+    -fx-background-color: transparent;
+}
+
+/* Style the thumb (the draggable part) */
+.scroll-bar .thumb {
+    -fx-background-color: #3C4753;
+    -fx-background-radius: 4px;
+    -fx-background-insets: 0;
+}
+
+/* Hide the increment and decrement buttons */
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-opacity: 0;
+    -fx-max-width: 0;
+    -fx-max-height: 0;
+    -fx-padding: 0;
+}
+
+.diagram-webview{
+    -fx-background-color: transparent;
+}
+
+.diagram-container {
+    -fx-background-color: #111418;
+    -fx-padding: 10px;
+    -fx-border-color: #2D3748;
+    -fx-border-width: 1px;
+    -fx-max-width: Infinity;
+    -fx-max-height: Infinity;
+}
+
+.diagram-imageview {
+    -fx-background-color: transparent;
+}

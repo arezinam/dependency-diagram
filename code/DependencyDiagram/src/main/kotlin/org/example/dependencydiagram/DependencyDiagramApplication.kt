@@ -7,8 +7,11 @@ import javafx.stage.Stage
 
 class DependencyDiagramApplication : Application() {
     override fun start(stage: Stage) {
-        val fxmlLoader = FXMLLoader(DependencyDiagramApplication::class.java.getResource("hello-view.fxml"))
-        val scene = Scene(fxmlLoader.load(), 320.0, 240.0)
+        val fxmlLoader = FXMLLoader(DependencyDiagramApplication::class.java.getResource("main-view.fxml"))
+        val scene = Scene(fxmlLoader.load(), 1200.0, 800.0)
+        // I wanted to move the css file in a different place, but the below function refuses to work with different path
+        // And it's used in the default JavaFX application, so I am afraid to use something different
+        scene.stylesheets.add("/main.css")
         stage.title = "Hello!"
         stage.scene = scene
         stage.show()

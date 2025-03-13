@@ -3,7 +3,7 @@ package org.example.dependencydiagram
 import javafx.fxml.FXML
 import javafx.scene.control.Label
 
-class HelloController {
+class MainController {
     @FXML
     private lateinit var welcomeText: Label
 

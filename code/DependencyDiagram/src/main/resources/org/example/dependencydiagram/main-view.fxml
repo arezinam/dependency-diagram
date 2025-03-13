@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.dependencydiagram.MainController"
+            prefHeight="800.0" prefWidth="1200.0"
+            styleClass="root">
+
+    <!-- Top panel with header and description -->
+    <top>
+        <VBox styleClass="top-section">
+            <Label text="Manage Dependency Diagram" styleClass="main-header"/>
+            <Label text="The project dependencies graph is a view of the project's dependencies (duh). It helps you understand how different parts of your codebase depend on each other, and can be useful for understanding complex projects, or refactoring code."
+                   styleClass="description-text" wrapText="true"/>
+        </VBox>
+    </top>
+
+    <!-- Bottom section with fixed-width left side and flexible right side -->
+    <center>
+        <HBox>
+            <!-- Section 1: Fixed width section split into 2 vertically -->
+            <VBox prefWidth="400.0" styleClass="left-panel">
+                <!-- The key change: Using a SplitPane to ensure fixed proportions -->
+                <SplitPane styleClass="split-pane" orientation="VERTICAL" VBox.vgrow="ALWAYS" dividerPositions="0.5">
+                    <!-- Upper half - Graph Data -->
+                    <VBox styleClass="graph-data-section">
+                        <Label text="Graph Data" styleClass="section-header"/>
+                        <TextArea fx:id="graphDataInput" promptText="Enter graph data (e.g., A -> B)
+One edge per line"
+                                  VBox.vgrow="ALWAYS" styleClass="graph-data-input"/>
+                    </VBox>
+
+                    <!-- Lower half - Graph Nodes -->
+                    <VBox styleClass="graph-nodes-section">
+                        <Label text="Graph Nodes" styleClass="section-header"/>
+                        <ScrollPane fitToWidth="true" fitToHeight="true" styleClass="transparent-background" VBox.vgrow="ALWAYS">
+                            <VBox fx:id="checkboxContainer" spacing="10" styleClass="checkbox-container">
+                                <!-- Checkboxes will be added programmatically -->
+                            </VBox>
+                        </ScrollPane>
+                    </VBox>
+                </SplitPane>
+            </VBox>
+
+            <!-- Section 2: Flexible width section that takes remaining space -->
+            <VBox HBox.hgrow="ALWAYS" styleClass="right-panel">
+                <Label text="Dependency Diagram" styleClass="section-header"/>
+                <StackPane fx:id="diagramContainer" VBox.vgrow="ALWAYS" styleClass="diagram-container" maxWidth="Infinity" maxHeight="Infinity">
+                    <VBox fx:id="noDataContainer" alignment="CENTER" styleClass="no-data-container">
+                        <Label text="No Graph Data Detected" styleClass="no-data-header"/>
+                        <Label text="Enter graph data above to see the graph visualization" styleClass="no-data-text"/>
+                        <Button fx:id="loadExampleButton" text="Load Example" styleClass="load-example-button"/>
+                    </VBox>
+                </StackPane>
+            </VBox>
+        </HBox>
+    </center>
+
+</BorderPane>

@@ -19,19 +19,8 @@ class InputDebouncer(
     private val delayMillis: Long,
     private val scheduler: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
 ) : Debouncer {
-    /** Tracks the currently scheduled action so it can be cancelled if needed */
     private var scheduledFuture: ScheduledFuture<*>? = null
 
-    /**
-     * Queues an action to run after input has settled.
-     *
-     * Example usage:
-     *   searchDebouncer.debounce {
-     *     updateDependencyGraph(searchText.text)
-     *   }
-     *
-     * @param action The function to execute after the input settles
-     */
     override fun debounce(action: () -> Unit) {
         // Cancel previous pending action if it exists
         scheduledFuture?.cancel(false)
@@ -42,16 +31,6 @@ class InputDebouncer(
         }, delayMillis, TimeUnit.MILLISECONDS)
     }
 
-    /**
-     * Cleans up resources when this debouncer is no longer needed.
-     *
-     * Important to call this when the controller/component is being destroyed:
-     *
-     * override fun onDispose() {
-     *     searchDebouncer.shutdown()
-     *     super.onDispose()
-     * }
-     */
     override fun shutdown() {
         scheduledFuture?.cancel(false)
         scheduler.shutdown()

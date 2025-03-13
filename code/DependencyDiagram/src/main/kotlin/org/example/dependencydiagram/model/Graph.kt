@@ -3,10 +3,10 @@ package org.example.dependencydiagram.model
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 
-class Graph : ObservableGraphModel{
-    private val vertices = FXCollections.observableArrayList<Vertex>()
+class Graph{
+    private val vertices = mutableListOf<Vertex>()
 
-    override fun updateGraph(parsedGraph: ParsedGraph) {
+    fun updateGraph(parsedGraph: ParsedGraph) {
         // Save current enabled states
         val currentVertexMap = vertices.associateBy({ it.id }, { it.enabled })
 
@@ -22,15 +22,12 @@ class Graph : ObservableGraphModel{
         }
     }
 
-    override fun clear() {
+    fun clear() {
         vertices.clear()
     }
 
-    override fun getVertices(): List<Vertex> = vertices.toList()
+    fun getVertices(): List<Vertex> = vertices.toList()
 
-    override fun getEnabledVertices(): Set<String> =
+    fun getEnabledVertices(): Set<String> =
         vertices.filter { it.enabled }.map { it.id }.toSet()
-
-    override fun observeVertices(): ObservableList<Vertex> =
-        FXCollections.unmodifiableObservableList(vertices)
 }

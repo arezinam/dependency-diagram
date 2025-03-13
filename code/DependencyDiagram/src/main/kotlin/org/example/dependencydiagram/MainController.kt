@@ -1,114 +1,166 @@
 package org.example.dependencydiagram
 
 import javafx.application.Platform
-import javafx.collections.ListChangeListener
 import javafx.fxml.FXML
-import javafx.scene.control.Label
-import javafx.scene.control.ListView
-import javafx.scene.control.TextArea
-import javafx.scene.control.cell.CheckBoxListCell
+import javafx.fxml.Initializable
+import javafx.scene.control.*
 import javafx.scene.image.ImageView
-import javafx.util.StringConverter
+import javafx.scene.layout.StackPane
+import javafx.scene.layout.VBox
+import org.example.dependencydiagram.config.GraphVisualizerConfig
+import org.example.dependencydiagram.debouncer.Debouncer
 import org.example.dependencydiagram.debouncer.InputDebouncer
 import org.example.dependencydiagram.generator.PlantUMLCodeGenerator
 import org.example.dependencydiagram.generator.PlantUMLImageGenerator
 import org.example.dependencydiagram.model.Graph
-import org.example.dependencydiagram.model.Vertex
+import org.example.dependencydiagram.parser.GraphParser
 import org.example.dependencydiagram.parser.RegexGraphParser
 import org.example.dependencydiagram.renderer.JavaFXGraphRenderer
 import org.example.dependencydiagram.renderer.PlantUMLGraphRenderer
+import java.net.URL
+import java.util.*
 
-class MainController {
-    @FXML private lateinit var graphInputTextArea: TextArea
-    @FXML private lateinit var vertexListView: ListView<Vertex>
-    @FXML private lateinit var diagramImageView: ImageView
+class MainController : Initializable {
+    @FXML lateinit var graphDataInput: TextArea
+    @FXML lateinit var checkboxContainer: VBox
+    @FXML lateinit var diagramContainer: StackPane
+    @FXML lateinit var noDataContainer: VBox
+    @FXML lateinit var loadExampleButton: Button
 
-    // Core components
     private val graphParser = RegexGraphParser()
     private val graphModel = Graph()
     private val debouncer = InputDebouncer(500L)
-    private val renderer = JavaFXGraphRenderer(
-        PlantUMLGraphRenderer(
-            PlantUMLCodeGenerator(),
-            PlantUMLImageGenerator()
-        )
-    )
+    val codeGenerator = PlantUMLCodeGenerator()
+    val imageGenerator = PlantUMLImageGenerator()
+    val plantUMLGraphRenderer = PlantUMLGraphRenderer(codeGenerator, imageGenerator)
+    val renderer = JavaFXGraphRenderer(plantUMLGraphRenderer)
 
-    @FXML
-    fun initialize() {
-        // Configure vertex list view to use checkboxes
-        vertexListView.setCellFactory {
-            CheckBoxListCell<Vertex>(
-                { vertex -> vertex.enabledProperty() },
-                VertexStringConverter()
-            )
-        }
+    // Using ImageView for diagram display
+    private var diagramImageView = ImageView()
 
-        // Bind vertex list to the model
-        vertexListView.items = graphModel.observeVertices()
+    override fun initialize(location: URL?, resources: ResourceBundle?) {
+        // Set up the ImageView with proper constraints
+        diagramImageView.styleClass.add("diagram-imageview")
+        diagramImageView.isPreserveRatio = true
 
-        // Set up input listener with debouncing
-        graphInputTextArea.textProperty().addListener { _, _, newText ->
+        // Critical: Set these properties to prevent infinite expansion
+        diagramImageView.isSmooth = true
+        diagramImageView.isCache = true
+
+        // Bind the dimensions to the container, but with a maximum size
+        // This prevents the ImageView from growing infinitely
+        diagramImageView.fitWidthProperty().bind(diagramContainer.widthProperty().multiply(0.95))
+        diagramImageView.fitHeightProperty().bind(diagramContainer.heightProperty().multiply(0.95))
+
+        // Make sure the ImageView doesn't force its container to expand
+        StackPane.setAlignment(diagramImageView, javafx.geometry.Pos.CENTER)
+
+        diagramContainer.children.add(diagramImageView)
+        diagramImageView.isVisible = false
+
+        // Set up text area listener with debounce
+        graphDataInput.textProperty().addListener { _, _, newValue ->
             debouncer.debounce {
-                updateGraph(newText)
+                handleTextInputChange(newValue)
             }
         }
 
-        // Initial view setup
-        graphInputTextArea.text = "A -> B\nB -> C\nC -> A"
+        // Set up load example button
+        loadExampleButton.setOnAction {
+            graphDataInput.text = generateExampleGraph()
+        }
 
-        // Set up listener for vertex enabled state changes
-        vertexListView.items.addListener(ListChangeListener {
-            renderGraph()
-        })
+        // Initial empty state
+        handleTextInputChange("")
     }
 
-    private fun updateGraph(graphDefinition: String) {
-        val parsedGraph = graphParser.parseGraphDefinition(graphDefinition)
-        graphModel.updateGraph(parsedGraph)
-        renderGraph()
+
+
+    private fun handleTextInputChange(text: String) {
+        Platform.runLater {
+            if (text.isNotBlank()) {
+                // Parse input and update model
+                val parsedGraph = graphParser.parseGraphDefinition(text)
+                graphModel.updateGraph(parsedGraph)
+
+                // Update UI
+                updateVertexCheckboxes()
+                refreshGraph()
+
+                // Show graph view
+                noDataContainer.isVisible = false
+                diagramImageView.isVisible = true
+            } else {
+                // Handle empty input
+                noDataContainer.isVisible = true
+                diagramImageView.isVisible = false
+                graphModel.clear()
+                updateVertexCheckboxes()
+            }
+        }
     }
 
-    private fun renderGraph() {
-        val graphDefinition = graphInputTextArea.text
-        val enabledVertices = graphModel.getEnabledVertices()
 
-        // Show loading indicator or placeholder
-        diagramImageView.image = null
+    private fun updateVertexCheckboxes() {
+        // Clear existing checkboxes
+        checkboxContainer.children.clear()
 
-        // Request rendering
+
+        val vertices = graphModel.getVertices()
+
+        // Add a checkbox for each vertex
+        if (vertices.isEmpty()) {
+            // Add a label when no vertices exist
+            val label = Label("No vertices found in graph data")
+            label.styleClass.add("no-vertices-label")
+            checkboxContainer.children.add(label)
+        } else {
+            vertices.forEach { vertex ->
+                val checkBox = CheckBox("Node: ${vertex.id}").apply {
+                    selectedProperty().bindBidirectional(vertex.enabledProperty)
+                    selectedProperty().addListener { _, _, _ -> refreshGraph() }
+                    styleClass.add("node-checkbox")
+                }
+                checkboxContainer.children.add(checkBox)
+            }
+        }
+    }
+
+
+
+    private fun refreshGraph() {
+        // Only proceed if we have vertices
+        if (graphModel.getVertices().isEmpty()) return
+
         renderer.renderGraph(
-            graphDefinition,
-            enabledVertices,
-            { image ->
+            graphDefinition = graphDataInput.text,
+            enabledVertices = graphModel.getEnabledVertices(),
+            onSuccess = { image ->
                 Platform.runLater {
                     diagramImageView.image = image
                 }
             },
-            { exception ->
-                Platform.runLater {
-                    // Show error to user
-                    println("Error rendering graph: ${exception.message}")
-                    // In a real app, you might show this in the UI
-                }
+            onError = { exception ->
+                exception.printStackTrace()
             }
         )
     }
 
-    // Handle vertex check/uncheck events
-    private fun onVertexEnabledChanged() {
-        renderGraph()
-    }
 
-    // Converter for displaying vertices in the list view
-    private class VertexStringConverter : StringConverter<Vertex>() {
-        override fun toString(vertex: Vertex): String = vertex.id
-        override fun fromString(string: String): Vertex = Vertex(string)
-    }
+    private fun generateExampleGraph(): String {
+        // Generate a random graph with 8-12 vertices and 10-20 edges
+        val vertexCount = (8..12).random()
+        val edgeCount = (10..20).random()
 
-    // Cleanup resources when application closes
-    fun shutdown() {
-        debouncer.shutdown()
-        renderer.shutdown()
+        val vertices = ('A'..'Z').take(vertexCount).map { it.toString() }
+        val edges = mutableListOf<String>()
+
+        repeat(edgeCount) {
+            val from = vertices.random()
+            val to = vertices.filter { it != from }.random()
+            edges.add("$from -> $to")
+        }
+
+        return edges.joinToString("\n")
     }
 }

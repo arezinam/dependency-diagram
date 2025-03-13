@@ -163,4 +163,9 @@ class MainController : Initializable {
 
         return edges.joinToString("\n")
     }
+
+    fun onClose() {
+        renderer.shutdown()
+        debouncer.shutdown()
+    }
 }

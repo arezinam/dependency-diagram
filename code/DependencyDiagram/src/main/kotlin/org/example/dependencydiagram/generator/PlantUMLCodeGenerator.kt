@@ -106,7 +106,7 @@ class PlantUMLCodeGenerator : CodeGenerator {
      */
     private fun defineNodes(sb: StringBuilder, enabledVertices: Set<String>) {
         enabledVertices.forEach { vertexId ->
-            sb.append("rectangle \"$vertexId\" as $vertexId #$nodeBackgroundColor {\n")
+            sb.append("rectangle \"$vertexId\" as $vertexId {\n")
             sb.append("}\n")
         }
     }

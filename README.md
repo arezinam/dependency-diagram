@@ -35,7 +35,7 @@ The project dependencies graph is a view of your project's dependencies. It help
 
 3. Run the application:
    ```
-   java -jar dependency-diagram.jar
+   java -jar DependencyDiagram.jar
    ```
 
 ## Usage
